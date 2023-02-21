@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "schools",
+  "info": {
+    "singularName": "school",
+    "pluralName": "schools",
+    "displayName": "School",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "lowestGradeServed": {
+      "type": "integer",
+      "required": true,
+      "min": 0,
+      "default": 0
+    },
+    "highestGradeServed": {
+      "type": "integer",
+      "default": 8,
+      "required": true
+    }
+  }
+}

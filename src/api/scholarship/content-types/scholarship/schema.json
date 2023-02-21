@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "scholarships",
+  "info": {
+    "singularName": "scholarship",
+    "pluralName": "scholarships",
+    "displayName": "Scholarship",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "richtext",
+      "required": true
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::tag.tag"
+    }
+  }
+}

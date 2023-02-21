@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "students",
+  "info": {
+    "singularName": "student",
+    "pluralName": "students",
+    "displayName": "Student",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "primarySchool": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::school.school"
+    },
+    "elementarySchool": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::school.school"
+    },
+    "middleSchool": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::school.school"
+    },
+    "middleSchoolGraduatedFrom": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::school.school"
+    },
+    "prospectiveMajor": {
+      "type": "string"
+    },
+    "prospectiveCollege": {
+      "type": "string"
+    },
+    "communityActivitiesDescription": {
+      "type": "richtext"
+    },
+    "schoolActivitiesDescription": {
+      "type": "richtext"
+    },
+    "jobsDescription": {
+      "type": "richtext"
+    }
+  }
+}
