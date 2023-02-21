@@ -45,13 +45,13 @@
       "type": "string"
     },
     "communityActivitiesDescription": {
-      "type": "richtext"
-    },
-    "schoolActivitiesDescription": {
-      "type": "richtext"
+      "type": "text"
     },
     "jobsDescription": {
-      "type": "richtext"
+      "type": "text"
+    },
+    "schoolActivitiesDescription": {
+      "type": "text"
     }
   }
 }

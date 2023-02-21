@@ -60,6 +60,7 @@ $RECYCLE.BIN/
 *.out
 *.pid
 
+!example_db.tar.gz
 
 ############################
 # Logs and databases
