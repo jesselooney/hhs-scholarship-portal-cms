@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "applications",
+  "info": {
+    "singularName": "application",
+    "pluralName": "applications",
+    "displayName": "Application"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "essay": {
+      "type": "text",
+      "required": true
+    },
+    "scholarship": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::scholarship.scholarship"
+    },
+    "student": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::student.student"
+    }
+  }
+}
