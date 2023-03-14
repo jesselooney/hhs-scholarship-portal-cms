@@ -34,6 +34,9 @@ async function assertSchoolSelectionIsValid(
   // If no school was connected in this query, our job is done.
   if (typeof connectedSchool === "undefined") return;
 
+  // TODO: the Query Engine API is not recommended.
+  // The Entity Service API should be used instead.
+
   const {
     name: schoolName,
     lowestGradeServed,
