@@ -13,11 +13,11 @@
   "pluginOptions": {},
   "attributes": {
     "accessDurationStart": {
-      "type": "date",
+      "type": "datetime",
       "required": true
     },
     "accessDurationEnd": {
-      "type": "date",
+      "type": "datetime",
       "required": true
     }
   }
