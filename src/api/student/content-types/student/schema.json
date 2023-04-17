@@ -52,6 +52,11 @@
     },
     "schoolActivitiesDescription": {
       "type": "text"
+    },
+    "classLinkId": {
+      "type": "uid",
+      "required": true,
+      "private": true
     }
   }
 }
