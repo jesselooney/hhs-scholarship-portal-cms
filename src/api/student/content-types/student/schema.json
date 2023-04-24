@@ -12,10 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "firstName": {
-      "type": "string"
-    },
-    "lastName": {
+    "name": {
       "type": "string"
     },
     "primarySchool": {
