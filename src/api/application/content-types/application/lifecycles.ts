@@ -45,7 +45,7 @@ export default {
     const scholarshipID = newScholarshipID ?? oldScholarshipID;
     const studentID = newStudentID ?? oldStudentID;
 
-    await assertApplicationIsUnique(scholarshipID, studentID, application.id);
+    await assertApplicationIsUnique(scholarshipID, studentID, applicationID);
   },
 };
 
