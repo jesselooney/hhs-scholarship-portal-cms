@@ -45,7 +45,7 @@ export default {
     const scholarshipID = newScholarshipID ?? oldScholarshipID;
     const studentID = newStudentID ?? oldStudentID;
 
-    await assertApplicationIsUnique(scholarshipID, studentID);
+    await assertApplicationIsUnique(scholarshipID, studentID, application.id);
   },
 };
 
@@ -55,37 +55,29 @@ export default {
  */
 async function assertApplicationIsUnique(
   scholarshipID: number,
-  studentID: number
+  studentID: number,
+  applicationID?: number
 ) {
   // Existing applications from the same student to the same scholarship
   const existingApplications = await strapi.entityService.findMany(
     "api::application.application",
     {
+      fields: ["id"],
       filters: {
         scholarship: scholarshipID,
         student: studentID,
-      },
-      populate: {
-        scholarship: {
-          fields: ["name"],
-        },
-        student: {
-          fields: ["firstName", "lastName"],
-        },
       },
     }
   );
 
   if (existingApplications.length >= 1) {
     // There is at least 1 existing application with the same relations.
-    const scholarshipName = existingApplications[0].scholarship.name;
-    const studentName =
-      existingApplications[0].student.firstName +
-      " " +
-      existingApplications[0].student.lastName;
+    if (applicationID && applicationID === existingApplications[0].id)
+      // The existing application is the one currently being modified
+      return;
 
     throw new ApplicationError(
-      `Student '${studentName}' already has an application for scholarship '${scholarshipName}'`
+      `This student already has an application for this scholarship.`
     );
   }
 }
