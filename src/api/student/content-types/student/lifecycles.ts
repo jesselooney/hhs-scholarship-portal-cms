@@ -27,8 +27,11 @@ async function assertSchoolSelectionIsValid(
   student,
   [categoryName, minGrade, maxGrade]: [string, number, number]
 ) {
+  // If the connect field is not present, our job is done.
+  if (typeof student[categoryName]?.connect === "undefined") return;
+
   // Only one school can be connected at a time (or at all)
-  // in a category, so we choose the only possible index.
+  // in a category, so we choose the only possible index,
   const connectedSchool = student[categoryName].connect[0];
 
   // If no school was connected in this query, our job is done.

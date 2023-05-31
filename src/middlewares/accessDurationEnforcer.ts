@@ -7,29 +7,33 @@
 import { Strapi } from "@strapi/strapi";
 
 export default (config, { strapi }: { strapi: Strapi }) => {
-  // Add your own logic here.
   return async (ctx, next) => {
-    // Other policies require that there be exactly one configuration,
-    // so id this fails there are other problems anyway.
-    // .findMany() doesn't wrap results in an array when
-    // there is just one, by the way.
-    const { accessDurationStart, accessDurationEnd } =
-      await strapi.entityService.findMany("api::configuration.configuration", {
-        fields: ["accessDurationStart", "accessDurationEnd"],
-      });
+    // Only operate on public `/api` route.
+    if (ctx.request.url.startsWith("/api")) {
+      // Other policies require that there be exactly one configuration,
+      // so if this fails there are other problems anyway.
+      // .findMany() doesn't wrap results in an array when
+      // it is a single type, by the way.
+      const { accessDurationStart, accessDurationEnd } =
+        await strapi.entityService.findMany(
+          "api::configuration.configuration",
+          {
+            fields: ["accessDurationStart", "accessDurationEnd"],
+          }
+        );
 
-    const start = new Date(accessDurationStart);
-    const end = new Date(accessDurationEnd);
-    const today = new Date();
+      const start = new Date(accessDurationStart);
+      const end = new Date(accessDurationEnd);
+      const today = new Date();
 
-    if (today < start || end < today) {
-      // today is out of allowed access duration,
-      // so we should disable the public /api route
-      if (ctx.request.url.startsWith("/api"))
+      if (today < start || end < today) {
+        // today is out of allowed access duration,
+        // so we should block the request
         return ctx.forbidden("The application window has closed.", {
           accessDurationStart,
           accessDurationEnd,
         });
+      }
     }
 
     await next();

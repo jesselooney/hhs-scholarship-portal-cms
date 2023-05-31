@@ -5,8 +5,7 @@ export default {
      path: '/auth',
      handler: 'auth.redirectWithIdToken',
      config: {
-       policies: [],
-       middlewares: [],
+       auth: false,
      },
     },
   ],

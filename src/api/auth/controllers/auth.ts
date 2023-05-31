@@ -27,13 +27,16 @@ export default {
         ctx.throw(e.response.status);
         return null;
       });
-    const classLinkId = jose.decodeJwt(response.data.id_token).sub;
+
+    const myInfo = await axios("https://nodeapi.classlink.com/v2/my/info", {
+      headers: { Authorization: "Bearer " + response.data.access_token },
+    });
 
     // Find the student corresponding to the given ClassLink ID
     const results = await strapi.entityService
       .findMany("api::student.student", {
         fields: ["id"],
-        filters: { classLinkId: classLinkId },
+        filters: { classLinkId: myInfo.data.SourcedId },
       })
       .catch(() => ctx.throw(500));
 

@@ -25,5 +25,7 @@ export default ({ env }) => {
     tokenEndpointUrl: requireEnv("AUTH_TOKEN_ENDPOINT_URL"),
     clientId: requireEnv("AUTH_CLIENT_ID"),
     clientSecret: requireEnv("AUTH_CLIENT_SECRET"),
+    rosterApplicationId: requireEnv("AUTH_ROSTER_APPLICATION_ID"),
+    rosterAccessToken: requireEnv("AUTH_ROSTER_ACCESS_TOKEN")
   };
 };

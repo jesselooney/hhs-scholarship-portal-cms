@@ -4,95 +4,116 @@
  *
  */
 
-import React, { useState, useEffect } from "react";
-import pluginId from "../../pluginId";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { downloadCSV } from "../../../../../export-csv/admin/src/utils/downloadCSV";
+import { flattenRecursive } from "../../../../../export-csv/admin/src/utils/flatten";
 import {
-  Badge,
   Box,
   Button,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  Flex,
   Stack,
-  DatePicker,
-  GridLayout,
   Typography,
 } from "@strapi/design-system";
+import { renameKeys } from "../../utils/renameKeys";
+import { ExclamationMarkCircle } from "@strapi/icons";
+import { Trash } from "@strapi/icons";
+import { request } from "@strapi/helper-plugin";
+
+// Make api requests to the same origin when
+// not running on admin development site.
+const ORIGIN =
+  window.origin === "http://localhost:8000"
+    ? "http://localhost:1337"
+    : window.origin;
 
 const HomePage = () => {
+  const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
   return (
     <Stack padding={8} spacing={8}>
-      <PortalDateConfiguration />
       <ConfigurationCard title="Import">
-        <Button>Upload Scholarships</Button>
+        <Button
+          onClick={() => {
+            request("/dashboard/import-students", { method: "POST" });
+          }}
+        >
+          Import Students from ClassLink
+        </Button>
       </ConfigurationCard>
       <ConfigurationCard title="Export">
-        <Button>Download Applications</Button>
+        <Button
+          marginBottom={4}
+          onClick={() =>
+            downloadRequestAsCSV(
+              ORIGIN + "/api/applications?populate=*&sort=student.name"
+            )
+          }
+        >
+          Download Applications Ordered Alphabetically by Student Name
+        </Button>
+        <Button
+          marginBottom={4}
+          onClick={() =>
+            downloadRequestAsCSV(
+              ORIGIN + "/api/applications?populate=*&sort=scholarship.name"
+            )
+          }
+        >
+          Download Applications Ordered Alphabetically by Scholarship Name
+        </Button>
       </ConfigurationCard>
       <ConfigurationCard title="Administration">
-        <Button variant="danger">Purge Data</Button>
+        <Button variant="danger" onClick={() => setIsDeleteDialogVisible(true)}>
+          Delete Students and Applications
+        </Button>
+        <Dialog
+          onClose={() => setIsDeleteDialogVisible(false)}
+          title="Confirmation"
+          isOpen={isDeleteDialogVisible}
+        >
+          <DialogBody icon={<ExclamationMarkCircle />}>
+            <Flex direction="column" alignItems="center" gap={2}>
+              <Flex justifyContent="center">
+                <Typography id="confirm-description">
+                  This is a destructive action. Clicking Confirm will delete all
+                  student records and all applications. Do not do this unless
+                  the portal is closed and you have a saved report of all the
+                  application and student data that you need.
+                </Typography>
+              </Flex>
+            </Flex>
+          </DialogBody>
+          <DialogFooter
+            startAction={
+              <Button
+                onClick={() => setIsDeleteDialogVisible(false)}
+                variant="tertiary"
+              >
+                Cancel
+              </Button>
+            }
+            endAction={
+              // TODO actually delete things
+              <Button
+                variant="danger-light"
+                startIcon={<Trash />}
+                onClick={() => {
+                  request("/dashboard/delete-students-and-applications", {
+                    method: "DELETE",
+                  });
+                  setIsDeleteDialogVisible(false);
+                }}
+              >
+                Confirm
+              </Button>
+            }
+          />
+        </Dialog>
       </ConfigurationCard>
     </Stack>
-  );
-};
-
-type PortalStatus = "unconfigured" | "open" | "closed";
-
-const PortalDateConfiguration = () => {
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
-  const [error, setError] = useState("");
-  const [portalStatus, setPortalStatus] =
-    useState<PortalStatus>("unconfigured");
-
-  useEffect(() => {
-    if (
-      startDate !== undefined &&
-      endDate !== undefined &&
-      startDate > endDate
-    ) {
-      setError("End date cannot be before start date.");
-      setPortalStatus("unconfigured");
-    } else {
-      setError("");
-      if (startDate !== undefined && endDate !== undefined) {
-        const today = new Date();
-        setPortalStatus(
-          startDate <= today && today <= endDate ? "open" : "closed"
-        );
-      }
-    }
-  }, [startDate, endDate]);
-
-  return (
-    <ConfigurationCard
-      title="Application Submission Window"
-      description="Configure the time period during which students may access the portal."
-    >
-      <Badge marginBottom={2}>status: {portalStatus}</Badge>
-      <GridLayout>
-        <DatePicker
-          onChange={setStartDate}
-          selectedDate={startDate}
-          label="Opens"
-          name="datepicker-start"
-          clearLabel="Clear the date picker"
-          onClear={() => setStartDate(undefined)}
-          selectedDateLabel={(formattedDate: any) =>
-            `Date picker, current is ${formattedDate}`
-          }
-        />
-        <DatePicker
-          onChange={setEndDate}
-          selectedDate={endDate}
-          label="Closes"
-          name="datepicker-end"
-          clearLabel="Clear the date picker"
-          onClear={() => setEndDate(undefined)}
-          selectedDateLabel={(formattedDate: any) =>
-            `Date picker, current is ${formattedDate}`
-          }
-          error={error}
-        />
-      </GridLayout>
-    </ConfigurationCard>
   );
 };
 
@@ -116,11 +137,52 @@ const ConfigurationCard = ({
   </Box>
 );
 
-interface SimpleDatePickerProps {
-  date: any;
-  setDate: any;
-  label: string;
-  name: string;
+export default HomePage;
+
+/**
+ * Helper function so we can do the same formatting
+ * and download process for different sorting schemes
+ * Only works on the `/api/applications?populate=*&...`
+ * family of URLs.
+ */
+async function downloadRequestAsCSV(url: string) {
+  const res = await fetch(url);
+  const data: Record<string, any>[] = (await res.json()).data;
+  console.log(data);
+  const renamedData = data.map((record) => {
+    // flatten nested data so we can rename the keys easily
+    const flatRecord: Record<string, any> = flattenRecursive(record);
+    return renameKeys(flatRecord, {
+      "attributes.createdAt": null,
+      "attributes.scholarship.data.attributes.createdAt": null,
+      "attributes.scholarship.data.attributes.updatedAt": null,
+      "attributes.scholarship.data.id": null,
+      "attributes.student.data.attributes.createdAt": null,
+      "attributes.student.data.attributes.updatedAt": null,
+      "attributes.student.data.id": null,
+      "attributes.updatedAt": null,
+      id: null,
+      // fields we want to keep
+      "attributes.essay": "essay",
+      "attributes.scholarship.data.attributes.description":
+        "scholarshipDescription",
+      "attributes.scholarship.data.attributes.name": "scholarshipName",
+      "attributes.student.data.attributes.communityActivitiesDescription":
+        "studentCommunityActivities",
+      "attributes.student.data.attributes.jobsDescription": "studentJobs",
+      "attributes.student.data.attributes.name": "studentName",
+      "attributes.student.data.attributes.prospectiveCollege":
+        "studentProspectiveCollege",
+      "attributes.student.data.attributes.prospectiveMajor":
+        "studentProspectiveMajor",
+      "attributes.student.data.attributes.schoolActivitiesDescription":
+        "studentSchoolActivities",
+    });
+  });
+  // await downloadCSV(renamedData);
 }
 
-export default HomePage;
+async function toNumberList(res: Response): Promise<number[]> {
+  const body = await res.json();
+  return body.data.map((obj: { id: any }) => obj.id);
+}

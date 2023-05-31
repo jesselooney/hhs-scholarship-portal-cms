@@ -12,7 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
+    "givenName": {
       "type": "string"
     },
     "primarySchool": {
@@ -54,6 +54,9 @@
       "type": "uid",
       "required": true,
       "private": true
+    },
+    "familyName": {
+      "type": "string"
     }
   }
 }
