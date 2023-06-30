@@ -4,7 +4,8 @@
   "info": {
     "singularName": "application",
     "pluralName": "applications",
-    "displayName": "Application"
+    "displayName": "Application",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -24,6 +25,11 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::student.student"
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false,
+      "required": true
     }
   }
 }
