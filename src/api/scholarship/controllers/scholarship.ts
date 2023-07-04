@@ -1,7 +1,17 @@
-/**
- * scholarship controller
- */
+export default {
+  async findMany(ctx) {
+    return await strapi.entityService.findMany("api::scholarship.scholarship", {
+      populate: ["tags"],
+    });
+  },
 
-import { factories } from '@strapi/strapi'
-
-export default factories.createCoreController('api::scholarship.scholarship');
+  async findOne(ctx) {
+    return await strapi.entityService.findOne(
+      "api::scholarship.scholarship",
+      ctx.request.params.id,
+      {
+        populate: ["tags"],
+      }
+    );
+  },
+};
