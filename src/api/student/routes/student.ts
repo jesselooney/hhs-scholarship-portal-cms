@@ -1,7 +1,16 @@
-/**
- * student router
- */
-
-import { factories } from '@strapi/strapi';
-
-export default factories.createCoreRouter('api::student.student');
+export default {
+  routes: [
+    {
+      method: "GET",
+      path: "/students/me",
+      handler: "student.findMe",
+      config: { auth: false },
+    },
+    {
+      method: "PATCH",
+      path: "/students/me",
+      handler: "student.updateMe",
+      config: { auth: false },
+    },
+  ],
+};

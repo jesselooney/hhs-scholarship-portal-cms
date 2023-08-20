@@ -1,0 +1,24 @@
+{
+  "kind": "singleType",
+  "collectionName": "configurations",
+  "info": {
+    "singularName": "configuration",
+    "pluralName": "configurations",
+    "displayName": "Configuration",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "accessDurationStart": {
+      "type": "datetime",
+      "required": true
+    },
+    "accessDurationEnd": {
+      "type": "datetime",
+      "required": true
+    }
+  }
+}

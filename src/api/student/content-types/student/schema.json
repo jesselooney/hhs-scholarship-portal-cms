@@ -12,10 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "firstName": {
-      "type": "string"
-    },
-    "lastName": {
+    "givenName": {
       "type": "string"
     },
     "primarySchool": {
@@ -52,6 +49,14 @@
     },
     "schoolActivitiesDescription": {
       "type": "text"
+    },
+    "classLinkId": {
+      "type": "uid",
+      "required": true,
+      "private": true
+    },
+    "familyName": {
+      "type": "string"
     }
   }
 }

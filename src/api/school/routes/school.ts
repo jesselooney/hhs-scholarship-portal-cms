@@ -1,7 +1,16 @@
-/**
- * school router
- */
-
-import { factories } from '@strapi/strapi';
-
-export default factories.createCoreRouter('api::school.school');
+export default {
+  routes: [
+    {
+      method: "GET",
+      path: "/schools",
+      handler: "school.findMany",
+      config: { auth: false },
+    },
+    {
+      method: "GET",
+      path: "/schools/:id",
+      handler: "school.findOne",
+      config: { auth: false },
+    },
+  ],
+};

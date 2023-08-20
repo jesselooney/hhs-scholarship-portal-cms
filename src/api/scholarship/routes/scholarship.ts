@@ -1,7 +1,16 @@
-/**
- * scholarship router
- */
-
-import { factories } from '@strapi/strapi';
-
-export default factories.createCoreRouter('api::scholarship.scholarship');
+export default {
+  routes: [
+    {
+      method: "GET",
+      path: "/scholarships",
+      handler: "scholarship.findMany",
+      config: { auth: false },
+    },
+    {
+      method: "GET",
+      path: "/scholarships/:id",
+      handler: "scholarship.findOne",
+      config: { auth: false },
+    },
+  ],
+};

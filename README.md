@@ -24,8 +24,10 @@ yarn develop
 ```
 When you first visit the admin page, you will be prompted to create an account to serve as a Super Admin. This will allow you to view and manage the data interactively.
 
+5. Configure settings, including:
+
+* Default 'Public' role must have permissions to access all fields in: `Application`, `Auth`, `Scholarship`, `School`, `Student`, and `Tag`, and **no permissions** to access any of the other api routes (e.g. `Email`, `i18n`, etc.).
+
 # Usage
 
 The Strapi user guide is available at https://docs.strapi.io/user-docs/latest/getting-started/introduction.html.
-
-The API can be consumed via GraphQL, and a playground for queries is available at the `/graphql` route. This page also provide auto-generated documentation and a schema.
