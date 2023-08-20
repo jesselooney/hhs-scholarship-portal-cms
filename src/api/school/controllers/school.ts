@@ -1,7 +1,12 @@
-/**
- * school controller
- */
+export default {
+  async findMany(ctx) {
+    return await strapi.entityService.findMany("api::school.school");
+  },
 
-import { factories } from '@strapi/strapi'
-
-export default factories.createCoreController('api::school.school');
+  async findOne(ctx) {
+    return await strapi.entityService.findOne(
+      "api::school.school",
+      ctx.request.params.id
+    );
+  },
+};

@@ -1,7 +1,12 @@
-/**
- * tag controller
- */
+export default {
+  async findMany(ctx) {
+    return await strapi.entityService.findMany("api::tag.tag");
+  },
 
-import { factories } from '@strapi/strapi'
-
-export default factories.createCoreController('api::tag.tag');
+  async findOne(ctx) {
+    return await strapi.entityService.findOne(
+      "api::tag.tag",
+      ctx.request.params.id
+    );
+  },
+};

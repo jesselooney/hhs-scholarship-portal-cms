@@ -1,10 +1,16 @@
-/**
- * tag router
- */
-
-import { factories } from "@strapi/strapi";
-
-export default factories.createCoreRouter("api::tag.tag", {
-  only: ["find", "findOne"],
-  config: { find: { auth: false }, findOne: { auth: false } },
-});
+export default {
+  routes: [
+    {
+      method: "GET",
+      path: "/tags",
+      handler: "tag.findMany",
+      config: { auth: false },
+    },
+    {
+      method: "GET",
+      path: "/tags/:id",
+      handler: "tag.findOne",
+      config: { auth: false },
+    },
+  ],
+};
